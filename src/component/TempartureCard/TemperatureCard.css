@@ -1,0 +1,18 @@
+.temperature-card {
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  padding: 20px;
+}
+
+.temperature-card h2 {
+  margin-bottom: 10px;
+}
+
+.temperature-value {
+  font-size: 32px;
+  font-weight: 700;
+}

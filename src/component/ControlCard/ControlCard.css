@@ -1,0 +1,69 @@
+.Card-Container {
+  width: 90%;
+  margin: 20px auto;
+}
+
+.Card-Event {
+  background: #4361ee;
+
+  border-radius: 20px;
+
+  padding: 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.card-left h1 {
+  color: white;
+  font-size: 29px;
+  margin: 0;
+}
+
+.device-icon {
+  color: white;
+  font-size: 48px;
+}
+
+.btn-off {
+  background: #ff4040;
+
+  color: white;
+
+  border: none;
+
+  padding: 15px 40px;
+
+  border-radius: 18px;
+
+  font-size: 24px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.btn-on {
+  background: #00d628;
+
+  color: white;
+
+  border: none;
+
+  padding: 15px 40px;
+
+  border-radius: 18px;
+
+  font-size: 24px;
+  font-weight: bold;
+
+  cursor: pointer;
+}

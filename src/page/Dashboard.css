@@ -1,0 +1,20 @@
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.dashboard-header p {
+  color: #94a3b8;
+  margin-top: 4px;
+}

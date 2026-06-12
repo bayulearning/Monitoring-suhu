@@ -1,0 +1,14 @@
+.control-page {
+  display: flex;
+  flex-direction: column;
+
+  gap: 15px;
+
+  padding: 20px;
+}
+
+.control-page h1 {
+  width: 100%;
+  text-align: center;
+  border: wheat;
+}

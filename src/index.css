@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #2563eb;
+  --background: #0f172a;
+  --surface: #1e293b;
+  --text: #f8fafc;
+  --border: #334155;
+
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  height: 100%;
+  background: #111827;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
