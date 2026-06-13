@@ -1,0 +1,123 @@
+import "dotenv/config";
+import express, { json } from "express";
+import { Prisma, PrismaClient } from "@prisma/client";
+import cors from "cors";
+
+const prisma = new PrismaClient();
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("IOT Monitoring Berhasil berjalan");
+});
+
+app.get("/api/logs", async (req, res) => {
+  try {
+    const logs = await prisma.monitoring_logs.findMany({
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+    res.json(logs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Terjadi Kesalahan ",
+    });
+  }
+});
+
+app.post("/api/logs", async (req, res) => {
+  try {
+    const { temperature, humidity, status } = req.body;
+
+    const logs = await prisma.monitoring_logs.create({
+      data: {
+        temperature,
+        humidity,
+        status,
+      },
+    });
+    res.status(201).json(logs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Terjadi Kesalahan ",
+    });
+  }
+});
+
+app.get("/api/logs/latest", async (req, res) => {
+  try {
+    const logs = await prisma.monitoring_logs.findFirst({
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+    res.json(logs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Terjadi Kesalahan",
+    });
+  }
+});
+
+app.get("/api/logs/grouped", async (req, res) => {
+  try {
+    const logs = await prisma.monitoring_logs.findMany({
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+
+    const grouped = {};
+
+    logs.forEach((log) => {
+      const dateObj = new Date(log.created_at);
+
+      const date = dateObj.toLocaleDateString("id-ID", {
+        timeZone: "Asia/Jakarta",
+      });
+
+      const day = dateObj.toLocaleDateString("id-ID", {
+        weekday: "long",
+        timeZone: "Asia/Jakarta",
+      });
+
+      if (!grouped[date]) {
+        grouped[date] = {
+          day: day.charAt(0).toUpperCase() + day.slice(1),
+          date,
+          records: [],
+        };
+      }
+
+      grouped[date].records.push({
+        time: dateObj.toLocaleTimeString("id-ID", {
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone: "Asia/Jakarta",
+        }),
+        temp: `${log.temperature}°C`,
+        humidity: `${log.humidity}%`,
+        status: log.status,
+      });
+    });
+
+    res.json(Object.values(grouped));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Terjadi kesalahan",
+    });
+  }
+});
+
+const PORT = 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server berjalan di PORT ${PORT}`);
+});

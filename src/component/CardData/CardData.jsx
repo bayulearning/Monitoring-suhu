@@ -1,48 +1,30 @@
 import "./CardData.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 export default function CardData() {
   const [open, setOpen] = useState(null);
+  const [dataItem, setDataItem] = useState([]);
 
-  const dataItem = [
-    {
-      day: "Kamis",
-      date: "11-06-2026",
-      records: [
-        {
-          time: "19.00",
-          temp: "37°C",
-          humidity: "55%",
-          status: "Warning",
-        },
-        {
-          time: "19.10",
-          temp: "40°C",
-          humidity: "55%",
-          status: "Overheat",
-        },
-      ],
-    },
-    {
-      day: "Jumat",
-      date: "12-06-2026",
-      records: [
-        {
-          time: "19.20",
-          temp: "41°C",
-          humidity: "55%",
-          status: "Overheat",
-        },
-      ],
-    },
-  ];
-
-  // const storeData = [{
-  //   suhu:
-  // }];
+  console.log(dataItem);
 
   const handleClick = () => {
     setOpen(!open);
   };
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/logs/grouped")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("DATA DARI API");
+        console.log(data);
+
+        setDataItem(data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
   return (
     <>
       {dataItem.map((item, index) => (

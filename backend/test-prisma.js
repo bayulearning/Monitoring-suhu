@@ -9,6 +9,22 @@ async function main() {
   console.log(logs);
 }
 
+const latest = await prisma.monitoring_logs.findFirst({
+  orderBy: {
+    created_at: "desc",
+  },
+});
+
+console.log(latest);
+
+const overheat = await prisma.monitoring_logs.findMany({
+  where: {
+    status: "Overheat",
+  },
+});
+
+console.log(overheat);
+
 main()
   .catch((error) => {
     console.error(error);
