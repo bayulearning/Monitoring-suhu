@@ -36,6 +36,10 @@ export default function CardData() {
     },
   ];
 
+  // const storeData = [{
+  //   suhu:
+  // }];
+
   const handleClick = () => {
     setOpen(!open);
   };
