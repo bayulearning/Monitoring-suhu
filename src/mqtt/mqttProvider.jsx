@@ -19,12 +19,21 @@ export default function MqttProvider() {
       const status =
         data.temperature >= 40
           ? "Overheat"
-          : data.temperature >= 37
+          : data.temperature >= 34
             ? "Warning"
             : "Normal";
+      console.log(`Status berubah: ${previousStatus.current} -> ${status}`);
 
       if (status !== previousStatus.current) {
-        toast.warning(`Status berubah menjadi ${status}`);
+        toast.dismiss();
+
+        if (status === "Overheat") {
+          toast.error("Suhu Overheat");
+        } else if (status === "Warning") {
+          toast.warning("Suhu Berada dikondisi Warning");
+        } else {
+          toast.success("Suhu dalam kondisi Normal");
+        }
 
         previousStatus.current = status;
       }
@@ -33,7 +42,9 @@ export default function MqttProvider() {
         temperature: data.temperature,
         humidity: data.humidity,
         status,
-        lastUpdated: new Date().toLocaleTimeString(),
+        lastUpdated: new Date().toLocaleTimeString("id-ID", {
+          hour12: false,
+        }),
       });
     });
 

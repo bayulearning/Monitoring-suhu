@@ -6,13 +6,14 @@ const useMqttStore = create((set) => ({
   status: "Normal",
   lastUpdated: "-",
 
-  setData: (data) =>
+  setData: (data) => {
     set({
       temperature: data.temperature,
       humidity: data.humidity,
       status: data.status,
       lastUpdated: data.lastUpdated,
-    }),
+    });
+  },
 }));
 
 export default useMqttStore;

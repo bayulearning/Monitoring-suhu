@@ -5,8 +5,6 @@ export default function CardData() {
   const [open, setOpen] = useState(null);
   const [dataItem, setDataItem] = useState([]);
 
-  console.log(dataItem);
-
   const handleClick = () => {
     setOpen(!open);
   };

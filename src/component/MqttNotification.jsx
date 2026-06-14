@@ -14,7 +14,7 @@ export default function MqttNotification() {
       const status =
         data.temperature >= 40
           ? "Overheat"
-          : data.temperature >= 37
+          : data.temperature >= 34
             ? "Warning"
             : "Normal";
 
