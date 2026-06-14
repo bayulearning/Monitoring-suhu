@@ -116,6 +116,66 @@ app.get("/api/logs/grouped", async (req, res) => {
   }
 });
 
+app.get("/api/dashboard_summary", async (req, res) => {
+  try {
+    const overheatCount = await prisma.monitoring_logs.count({
+      where: {
+        status: "Overheat",
+      },
+    });
+
+    const warningCount = await prisma.monitoring_logs.count({
+      where: {
+        status: "Warning",
+      },
+    });
+
+    res.json({ overheatCount, warningCount });
+  } catch (error) {
+    res.status(500).json({ message: "Terjadi Kesalahan" });
+  }
+});
+
+app.get("/api/chart-summary", async (req, res) => {
+  try {
+    const logs = await prisma.monitoring_logs.findMany({
+      orderBy: {
+        created_at: "asc",
+      },
+    });
+
+    const grouped = {};
+
+    logs.forEach((log) => {
+      const date = new Date(log.created_at).toISOString().split("T")[0];
+
+      if (!grouped[date]) {
+        grouped[date] = {
+          totalTemp: 0,
+          count: 0,
+        };
+      }
+
+      grouped[date].totalTemp += log.temperature;
+      grouped[date].count += 1;
+    });
+
+    const result = Object.entries(grouped).map(([date, value]) => ({
+      day: date,
+      avgTemp: Number(value.totalTemp / value.count).toFixed(2),
+    }));
+
+    const last7Days = result.slice(-7);
+
+    res.json(last7Days);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Terjadi kesalahan",
+    });
+  }
+});
+
 const PORT = 3000;
 
 app.listen(PORT, () => {

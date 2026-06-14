@@ -26,7 +26,7 @@ export default function ChartBar({ data }) {
         >
           <XAxis dataKey="day" />
           <YAxis width={50} domain={[20, 45]} />
-          <Tooltip />
+          <Tooltip formatter={(value) => Number(value).toFixed(2)} />
           <Line
             type="monotone"
             dataKey="avgTemp"
