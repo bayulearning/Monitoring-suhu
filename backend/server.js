@@ -3,8 +3,17 @@ import express, { json } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
 import cors from "cors";
 
+import mqtt from "mqtt";
+
+const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt");
+
 const prisma = new PrismaClient();
 const app = express();
+
+let maintenanceState = {
+  maintenance: false,
+  temperature: 35,
+};
 
 app.use(cors());
 app.use(express.json());
@@ -47,6 +56,39 @@ app.post("/api/logs", async (req, res) => {
       message: "Terjadi Kesalahan ",
     });
   }
+});
+
+app.post("/api/maintenance", (req, res) => {
+  try {
+    const { maintenance, temperature } = req.body;
+
+    maintenanceState = {
+      maintenance,
+      temperature,
+    };
+
+    client.publish(
+      "iot-monitoring-kelompok/control",
+      JSON.stringify({
+        maintenance,
+        temperature,
+      }),
+    );
+
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Terjadi Kesalahan",
+    });
+  }
+});
+
+app.get("/api/maintenance", (req, res) => {
+  res.json(maintenanceState);
 });
 
 app.get("/api/logs/latest", async (req, res) => {

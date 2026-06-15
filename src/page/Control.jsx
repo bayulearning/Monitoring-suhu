@@ -2,8 +2,46 @@ import "./Control.css";
 import ControlCard from "../component/ControlCard/ControlCard";
 import { FaFan, FaLightbulb } from "react-icons/fa";
 import { HiMiniBellAlert } from "react-icons/hi2";
+import { useState, useEffect } from "react";
 
 export default function Control() {
+  const [maintenance, setMaintenance] = useState(false);
+  const [temperature, setTemperature] = useState("35");
+
+  const sendMaintenance = async () => {
+    console.log("BUTTON DIKLIK");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/maintenance", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          maintenance,
+          temperature: Number(temperature),
+        }),
+      });
+
+      console.log("STATUS:", response.status);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const loadMaintenance = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/maintenance");
+
+      const data = await response.json();
+
+      setMaintenance(data.maintenance);
+      setTemperature(String(data.temperature));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const devices = [
     {
       id: "led",
@@ -25,10 +63,33 @@ export default function Control() {
     },
   ];
 
+  useEffect(() => {
+    loadMaintenance();
+  }, []);
+
   return (
     <div className="control-page">
       <h1>Control Center</h1>
-      {devices.map((device) => {
+
+      <div className="maintenance-mode">
+        <label htmlFor="">
+          <input
+            type="checkbox"
+            checked={maintenance}
+            onChange={(e) => setMaintenance(e.target.checked)}
+          />
+          Maintenance
+        </label>
+
+        <input
+          type="number"
+          value={temperature}
+          onChange={(e) => setTemperature(e.target.value)}
+        />
+
+        <button onClick={sendMaintenance}>Test</button>
+      </div>
+      {/* {devices.map((device) => {
         return (
           <ControlCard
             key={device.id}
@@ -37,7 +98,7 @@ export default function Control() {
             icon={device.icon}
           />
         );
-      })}
+      })} */}
     </div>
   );
 }

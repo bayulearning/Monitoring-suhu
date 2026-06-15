@@ -1,14 +1,77 @@
 .control-page {
   display: flex;
   flex-direction: column;
-
-  gap: 15px;
-
-  padding: 20px;
+  gap: 20px;
+  padding: 28px 24px;
+  background: #0d1340;
+  border-radius: 16px;
 }
 
 .control-page h1 {
-  width: 100%;
   text-align: center;
-  border: wheat;
+  font-size: 28px;
+  font-weight: 500;
+  color: #e8eeff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.maintenance-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: 14px;
+  background: #1a2bcc;
+  border: 0.5px solid #3a4fe0;
+}
+
+.maintenance-mode label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #b5d4f4;
+  letter-spacing: 0.01em;
+  cursor: default;
+}
+
+.maintenance-mode input[type="text"],
+.maintenance-mode input[type="number"] {
+  background: #0d1340;
+  border: 0.5px solid #3a4fe0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #e8eeff;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.maintenance-mode input:focus {
+  border-color: #85b7eb;
+}
+
+.maintenance-mode button {
+  background: #378add;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e8eeff;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+}
+
+.maintenance-mode button:hover {
+  background: #185fa5;
+}
+
+.maintenance-mode button:active {
+  transform: scale(0.97);
 }
