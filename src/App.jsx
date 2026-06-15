@@ -7,12 +7,19 @@ import react from "react";
 
 import AppRoutes from "./routes/AppRoutes";
 import BottomBar from "./component/BottomBar/BottomBar";
+import MqttProvider from "./mqtt/mqttProvider";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <div className="App-container">
+      <ToastContainer position="top-center" autoClose={5000} />
+      {/* <MqttNotification /> */}
+      <MqttProvider />
       <div className="content">
         <AppRoutes />
       </div>

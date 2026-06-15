@@ -6,8 +6,21 @@
   align-items: center;
 
   width: 100%;
+  border-radius: 12px;
 }
 
+.histori-header {
+  display: flex;
+
+  background: var(--surface);
+  width: 100%;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  height: 70px;
+}
 .h1 {
   width: 100%;
   text-align: center;

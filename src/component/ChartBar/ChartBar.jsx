@@ -24,9 +24,13 @@ export default function ChartBar({ data }) {
             bottom: 0,
           }}
         >
-          <XAxis dataKey="day" />
+          <XAxis
+            dataKey="day"
+            interval={0}
+            tickFormatter={(value) => value.slice(5)}
+          />
           <YAxis width={50} domain={[20, 45]} />
-          <Tooltip />
+          <Tooltip formatter={(value) => Number(value).toFixed(2)} />
           <Line
             type="monotone"
             dataKey="avgTemp"
