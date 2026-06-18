@@ -27,9 +27,7 @@ export default function Control() {
 
   const loadMaintenance = async () => {
     try {
-      const response = await getMaintenance();
-
-      const data = await response.json();
+      const data = await getMaintenance();
 
       setMaintenance(data.maintenance);
       setTemperature(String(data.temperature));
