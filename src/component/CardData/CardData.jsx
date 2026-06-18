@@ -1,5 +1,6 @@
 import "./CardData.css";
 import { useState, useEffect } from "react";
+import { API_URL } from "../../config/api";
 
 export default function CardData() {
   const [open, setOpen] = useState(null);
@@ -10,7 +11,7 @@ export default function CardData() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/logs/grouped")
+    fetch(`${API_URL}/api/logs/grouped`)
       .then((res) => res.json())
       .then((data) => {
         console.log("DATA DARI API");

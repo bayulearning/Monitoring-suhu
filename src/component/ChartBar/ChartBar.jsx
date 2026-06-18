@@ -19,7 +19,7 @@ export default function ChartBar({ data }) {
           data={data}
           margin={{
             top: 10,
-            right: 10,
+            right: 20,
             left: -20,
             bottom: 0,
           }}
@@ -27,9 +27,15 @@ export default function ChartBar({ data }) {
           <XAxis
             dataKey="day"
             interval={0}
+            tick={{
+              fill: "#ffffff",
+              fontSize: 12,
+            }}
             tickFormatter={(value) => value.slice(5)}
+            tickMargin={10}
           />
-          <YAxis width={50} domain={[20, 45]} />
+
+          <YAxis width={50} domain={[20, 45]} tickMargin={5} />
           <Tooltip formatter={(value) => Number(value).toFixed(2)} />
           <Line
             type="monotone"

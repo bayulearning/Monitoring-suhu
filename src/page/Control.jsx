@@ -4,6 +4,11 @@ import { FaFan, FaLightbulb } from "react-icons/fa";
 import { HiMiniBellAlert } from "react-icons/hi2";
 import { useState, useEffect } from "react";
 
+import {
+  postSendMaintenance,
+  getMaintenance,
+} from "../services/controlService";
+
 export default function Control() {
   const [maintenance, setMaintenance] = useState(false);
   const [temperature, setTemperature] = useState("35");
@@ -12,16 +17,7 @@ export default function Control() {
     console.log("BUTTON DIKLIK");
 
     try {
-      const response = await fetch("http://localhost:3000/api/maintenance", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          maintenance,
-          temperature: Number(temperature),
-        }),
-      });
+      const response = await postSendMaintenance();
 
       console.log("STATUS:", response.status);
     } catch (error) {
@@ -31,7 +27,7 @@ export default function Control() {
 
   const loadMaintenance = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/maintenance");
+      const response = await getMaintenance();
 
       const data = await response.json();
 

@@ -1,5 +1,7 @@
+import { API_URL } from "../config/api";
+
 export const getDashboardSummary = async () => {
-  const response = await fetch("http://localhost:3000/api/dashboard_summary");
+  const response = await fetch(`${API_URL}/api/dashboard_summary`);
 
   if (!response.ok) {
     throw new Error("Gagal mengambil data");
@@ -9,7 +11,7 @@ export const getDashboardSummary = async () => {
 };
 
 export const getChartSummary = async () => {
-  const response = await fetch("http://localhost:3000/api/chart-summary");
+  const response = await fetch(`${API_URL}/api/chart-summary`);
 
   if (!response.ok) {
     throw new Error("Gagal mengambil data");

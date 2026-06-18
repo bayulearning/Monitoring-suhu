@@ -1,9 +1,12 @@
 import "dotenv/config";
-import express, { json } from "express";
-import { Prisma, PrismaClient } from "@prisma/client";
+import express from "express";
+import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 
 import mqtt from "mqtt";
+import rateLimit from "express-rate-limit";
+
+console.log("=== SERVER STARTING ===");
 
 const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt");
 
@@ -15,7 +18,33 @@ let maintenanceState = {
   temperature: 35,
 };
 
-app.use(cors());
+const limiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 300,
+  message: {
+    success: false,
+    message: "Terlalu banyak request, coba lagi nanti.",
+  },
+});
+
+const controlLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 50,
+});
+
+app.use("/api/maintenance", controlLimiter);
+
+app.use("/api", limiter);
+
+app.use(
+  cors({
+    origin: [
+      "https://blanchedalmond-goldfinch-407258.hostingersite.com",
+      "http://localhost:5173",
+    ],
+  }),
+);
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -218,8 +247,97 @@ app.get("/api/chart-summary", async (req, res) => {
   }
 });
 
-const PORT = 3000;
+// MQTT
 
-app.listen(PORT, () => {
-  console.log(`Server berjalan di PORT ${PORT}`);
+client.on("connect", () => {
+  console.log("MQTT Connected");
+  client.subscribe("iot-monitoring-kelompok/suhu");
 });
+
+client.on("error", (err) => {
+  console.error("MQTT Error:", err);
+});
+
+client.on("close", () => {
+  console.log("MQTT Disconnected");
+});
+
+let previousStatus = null;
+let lastOverheatSave = 0;
+let lastNormalSave = 0;
+
+client.on("message", async (topic, message) => {
+  try {
+    const data = JSON.parse(message.toString());
+
+    const status =
+      data.temperature >= 40
+        ? "Overheat"
+        : data.temperature >= 34
+          ? "Warning"
+          : "Normal";
+
+    const now = Date.now();
+
+    const enteredWarning = status === "Warning" && previousStatus !== "Warning";
+
+    const enteredOverheat =
+      status === "Overheat" && previousStatus !== "Overheat";
+
+    const periodicOverheat =
+      status === "Overheat" && now - lastOverheatSave >= 5000;
+
+    const periodicNormal =
+      status === "Normal" && now - lastNormalSave >= 600000; // 5 menit
+
+    const backToNormal = status === "Normal" && previousStatus !== "Normal";
+
+    if (
+      enteredWarning ||
+      enteredOverheat ||
+      periodicOverheat ||
+      periodicNormal ||
+      backToNormal
+    ) {
+      await prisma.monitoring_logs.create({
+        data: {
+          temperature: data.temperature,
+          humidity: data.humidity,
+          status,
+        },
+      });
+
+      if (status === "Overheat") {
+        lastOverheatSave = now;
+      }
+
+      if (status === "Normal") {
+        lastNormalSave = now;
+      }
+
+      console.log(`${status} tersimpan (${data.temperature}°C)`);
+    }
+
+    previousStatus = status;
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+async function startServer() {
+  try {
+    await prisma.$connect();
+    console.log("Database Connected");
+
+    const PORT = process.env.PORT || 3000;
+    console.log("=== BEFORE APP LISTEN ===");
+
+    app.listen(PORT, () => {
+      console.log(`Server berjalan di PORT ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Database Error:", error);
+  }
+}
+
+startServer();
