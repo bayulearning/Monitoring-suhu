@@ -22,7 +22,7 @@ export default function MqttProvider() {
           : data.temperature >= 34
             ? "Warning"
             : "Normal";
-      console.log(`Status berubah: ${previousStatus.current} -> ${status}`);
+      // console.log(`Status berubah: ${previousStatus.current} -> ${status}`);
 
       if (status !== previousStatus.current) {
         toast.dismiss();
