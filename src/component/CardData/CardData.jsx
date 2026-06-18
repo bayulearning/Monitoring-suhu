@@ -14,8 +14,8 @@ export default function CardData() {
     fetch(`${API_URL}/api/logs/grouped`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("DATA DARI API");
-        console.log(data);
+        // console.log("DATA DARI API");
+        // console.log(data);
 
         setDataItem(data);
       })

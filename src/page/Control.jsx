@@ -14,12 +14,15 @@ export default function Control() {
   const [temperature, setTemperature] = useState("35");
 
   const sendMaintenance = async () => {
-    console.log("BUTTON DIKLIK");
+    // console.log("BUTTON DIKLIK");
 
     try {
-      const response = await postSendMaintenance();
+      const response = await postSendMaintenance({
+        maintenance,
+        temperature: Number(temperature),
+      });
 
-      console.log("STATUS:", response.status);
+      // console.log("STATUS:", response.status);
     } catch (error) {
       console.error(error);
     }
